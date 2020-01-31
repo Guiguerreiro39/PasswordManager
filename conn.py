@@ -15,6 +15,7 @@ def write(conn):
     )
     conn.commit()
 
+
 def connect():
     Driver = "ODBC Driver 17 for SQL Server"
     Server = r"DESKTOP-QJJ4U09\SQLEXPRESS"
@@ -28,10 +29,10 @@ def connect():
             + Server
             + ";DATABASE="
             + Database
-            + ";TRUSTED_CONNECTION=YES;"
+            + ";TRUSTED_CONNECTION=YES"
+            + ";MARS_CONNECTION=YES"
         )
 
-        print("Success! Connected to " + Database + " database.")
         return conn
     except Exception as error:
         print("Connection failed..\n")

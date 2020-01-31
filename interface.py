@@ -1,7 +1,9 @@
 from getpass import getpass
 
+
 def main_interface():
-    print(''' 
+    print(
+        """ 
 >>>>> Password Manager <<<<<
 ============================
 1. Change Manager Secret
@@ -12,43 +14,58 @@ def main_interface():
 ----------------------------
 4. Change Service Password
 ============================
-    ''')
+    """
+    )
+
 
 def change_interface():
-    print('''
+    print(
+        """
 >>>>> Change Service Password <<<<<
 ===================================
 __________ Enter Service __________
-    ''')
+    """
+    )
     return input()
 
+
 def retrieve_interface():
-    print('''
+    print(
+        """
 >>>>> Retrieve Service Password <<<<<
 =====================================
 ___________ Enter Service ___________
-    \n''')
+    \n"""
+    )
     return input()
 
+
 def secret_interface():
-    print('''
+    print(
+        """
 >>>>> Change Manager Secret <<<<<
 =================================
 ______ Enter new password ______
-    \n''')
+    \n"""
+    )
     return getpass()
 
+
 def store_interface():
-    print('''
+    print(
+        """
 >>>>> Store new Service Password <<<<<
 ======================================
 _________ Enter new Service _________
-    ''')
+    """
+    )
     service = input()
 
-    print('''
+    print(
+        """
 ________Enter Service Password _______
-    \n''')
+    \n"""
+    )
     password = getpass()
 
     return (service, password)
