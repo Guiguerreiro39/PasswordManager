@@ -15,24 +15,25 @@ def write(conn):
     )
     conn.commit()
 
+def connect():
+    Driver = "ODBC Driver 17 for SQL Server"
+    Server = r"DESKTOP-QJJ4U09\SQLEXPRESS"
+    Database = "PassMng"
 
-Driver = "ODBC Driver 17 for SQL Server"
-Server = r"DESKTOP-QJJ4U09\SQLEXPRESS"
-Database = "PassMng"
+    try:
+        conn = pyodbc.connect(
+            "DRIVER="
+            + Driver
+            + ";SERVER="
+            + Server
+            + ";DATABASE="
+            + Database
+            + ";TRUSTED_CONNECTION=YES;"
+        )
 
-try:
-    conn = pyodbc.connect(
-        "DRIVER="
-        + Driver
-        + ";SERVER="
-        + Server
-        + ";DATABASE="
-        + Database
-        + ";TRUSTED_CONNECTION=YES;"
-    )
-
-    print("Success! Connected to " + Database + " database.")
-except Exception as error:
-    print("Connection failed..\n")
-    print(error)
+        print("Success! Connected to " + Database + " database.")
+        return conn
+    except Exception as error:
+        print("Connection failed..\n")
+        print(error)
 
