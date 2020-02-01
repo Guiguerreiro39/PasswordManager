@@ -1,4 +1,4 @@
-import os
+import os, sys
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
@@ -42,10 +42,10 @@ def dec_aesgcm(key, auth, nonce, ct):
 def test_crypt():
     password = b"12345"
     message = b"This is a test message"
+    salt = os.urandom(16)
 
-    secret = func_pbkdf2hmac(password)
-    key = secret[0]
-    salt = secret[1]
+    secret = derive_pbkdf2hmac(password, salt)
+    key = secret
     print("New secret key >> ", key)
 
     hashed_secret = func_sha256(key)
@@ -55,6 +55,7 @@ def test_crypt():
     nonce = encrypted[1]
     ciphertext = encrypted[0]
     print("Encrypted message >> ", ciphertext)
+    print("Ciphertext size: ", len(ciphertext))
 
     plaintext = dec_aesgcm(key, password, nonce, ciphertext)
     print("Decrypted message >> ", plaintext)

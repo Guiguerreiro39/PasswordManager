@@ -26,7 +26,15 @@ def change_interface():
 __________ Enter Service __________
     """
     )
-    return input()
+    service = input()
+
+    print(
+        """
+____Enter new Service Password ____
+    """
+    )
+    password = getpass()
+    return (service, password)
 
 
 def retrieve_interface():
@@ -46,7 +54,7 @@ def secret_interface():
 >>>>> Change Manager Secret <<<<<
 =================================
 ______ Enter new password ______
-    \n"""
+    """
     )
     return getpass()
 
@@ -64,7 +72,7 @@ _________ Enter new Service _________
     print(
         """
 ________Enter Service Password _______
-    \n"""
+    """
     )
     password = getpass()
 
