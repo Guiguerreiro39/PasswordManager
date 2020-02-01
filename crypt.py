@@ -4,6 +4,7 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+from cryptography.exceptions import InvalidTag
 
 backend = default_backend()
 
@@ -27,16 +28,24 @@ def derive_pbkdf2hmac(msg, salt):
 
 
 def enc_aesgcm(key, msg, auth):
-    cipher = AESGCM(key)
-    nonce = os.urandom(16)
-    ciphertext = cipher.encrypt(nonce, msg, auth)
-    return (ciphertext, nonce)
+        cipher = AESGCM(key)
+        nonce = os.urandom(16)
+        ciphertext = cipher.encrypt(nonce, msg, auth)
+        return (ciphertext, nonce)
 
 
 def dec_aesgcm(key, auth, nonce, ct):
-    cipher = AESGCM(key)
-    text = cipher.decrypt(nonce, ct, auth)
-    return text
+    try:
+        cipher = AESGCM(key)
+        text = cipher.decrypt(nonce, ct, auth)
+        return text
+    except InvalidTag:
+        print(
+            "Password compromised! Integrity cannot be guaranteed, please change your password."
+        )
+    except ValueError:
+        print("The key introduced in wrong! Ending connection.")
+        quit()
 
 
 def test_crypt():
