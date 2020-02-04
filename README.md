@@ -4,8 +4,8 @@
 
 ### Encryption schemes
 This program uses several encryption algorithms to ensure the safety of the stored passwords.
-- **PBKDF2HMAC**: In the beggining, for a person to access the manager, one must input a password. To use this password as the key of the encryption algorithm would affect the safety of the system since it is not big enough nor random enough. In order to deal with this issue, the key derivation function PBKDF2HMAC is used. This will take the password previously typed into consideration and create a much stronger and bigger key in order to be used in the encryption.
-- **SHA256 HASH**: The main secret is stored as an hash that is then compared to the password that is typed in the beggining. The hash will authenticate the password and ensure that it remains a secret.
+- **PBKDF2HMAC**: In the beginning, for a person to access the manager, one must input a password. To use this password as the key of the encryption algorithm would affect the safety of the system since it is not big enough nor random enough. In order to deal with this issue, the key derivation function PBKDF2HMAC is used. This will take the password previously typed into consideration and create a much stronger and bigger key in order to be used in the encryption.
+- **SHA256 HASH**: The main secret is stored as an hash that is then compared to the password that is typed in the beginning. The hash will authenticate the password and ensure that it remains a secret.
 - **AES-GCM**: In order to safely store the passwords of each service, one must encrypt then and also ensure its integrity, meaning there were not changed. For this purpose the authentication encryption algorithm AES-GCM is used. This will not only heavily encrypt your passwords but also verify that it was not manipulated by an attacker.
 
 ### Files
