@@ -1,4 +1,6 @@
-import conn, crypt, interface
+import conn
+import crypt
+import interface
 from os import urandom
 from sys import exit
 from msvcrt import getch
@@ -26,66 +28,75 @@ def verify_pw(pw):
         secret = crypt.derive_pbkdf2hmac(pw, salt)
         return sec_hash == crypt.func_sha256(secret)
 
-def store_pw(service, new_pw, key, pw):
-    cursor.execute(
-        "Select * from Services where Services=?",
-        service
-    )
 
-    if(cursor.rowcount == 0):
+def store_pw(service, new_pw, key, pw):
+    cursor.execute("Select * from Services where Services=?", service)
+
+    if cursor.rowcount == 0:
         (enc_pw, nonce) = crypt.enc_aesgcm(key, str.encode(new_pw), pw)
 
         cursor.execute(
             "Insert into Services(Services, Password, Nonce) values(?,?,?)",
-            (service, enc_pw, nonce)
+            (service, enc_pw, nonce),
         )
         cursor.commit()
         print("Service successfully stored!")
     else:
         print(">> Service already exists!")
 
-def retrieve_pw(service, key, pw):
-    cursor.execute(
-        "Select * from Services where Services=?",
-        service
-    )
 
-    if(cursor.rowcount != 0):
+def retrieve_pw(service, key, pw):
+    cursor.execute("Select * from Services where Services=?", service)
+
+    if cursor.rowcount != 0:
         for row in cursor:
             nonce = row[2]
             ct = row[1]
             password = crypt.dec_aesgcm(key, pw, nonce, ct).decode("utf-8")
-            print(
-                ">> Stored password for service " 
-                + service 
-                + ": "
-                + password
-                + '\n'
-            )
+            print(">> Stored password for service " +
+                  service + ": " + password + "\n")
             print("Click any key to continue..")
             getch()
-            
-    else:
-        print(">> Service does not exist")
-    
-def change_pw(service, key, pw, new_pw):
-    cursor.execute(
-        "Select * from Services where Services=?",
-        service
-    )
 
-    if(cursor.rowcount != 0):
+    else:
+        print(">> Service does not exist.")
+
+
+def change_pw(service, key, pw, new_pw):
+    cursor.execute("Select * from Services where Services=?", service)
+
+    if cursor.rowcount != 0:
         (enc_pw, nonce) = crypt.enc_aesgcm(key, str.encode(new_pw), pw)
 
-        cursor.execute('''
+        cursor.execute(
+            """
             Update Services
             Set Password=?, Nonce=?
-            Where Services=?''',
-            (enc_pw, nonce, service))
+            Where Services=?""",
+            (enc_pw, nonce, service),
+        )
         cursor.commit()
         print("Password for Service " + service + " successfully changed!")
     else:
-        print(">> Service does not exist")
+        print(">> Service does not exist.")
+
+
+def get_services():
+    cursor.execute(
+        """
+        Select Services from Services
+    """
+    )
+
+    if cursor.rowcount != 0:
+        print(">> Stored Services:")
+
+        for row in cursor:
+            print(row[0])
+        print("\nClick any key to continue..")
+        getch()
+    else:
+        print(">> There are no Services stored.")
 
 
 def handler(msg, pw, key):
@@ -102,15 +113,17 @@ def handler(msg, pw, key):
         elif msg == b"4":
             (service, new_pw) = interface.change_interface()
             change_pw(service, key, pw, new_pw)
+        elif msg == b"5":
+            get_services()
     except:
-        print('Fatal Error! Ending connection.')
+        print("Fatal Error! Ending connection.")
         quit()
 
 
 def main(pw, key):
     for new_input in iter(lambda: getch(), b"q"):
         try:
-            if int(new_input) in range(1, 5):
+            if int(new_input) in range(1, 6):
                 handler(new_input, pw, key)
                 interface.main_interface()
         except:
@@ -137,9 +150,7 @@ if __name__ == "__main__":
     if verify_pw(password):
         interface.main_interface()
 
-        cursor.execute(
-            "select Salt from Secret_Hash"
-        )
+        cursor.execute("select Salt from Secret_Hash")
 
         try:
             for row in cursor:

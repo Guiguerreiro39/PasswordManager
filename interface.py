@@ -13,6 +13,8 @@ def main_interface():
 3. Retrieve Service Password
 ----------------------------
 4. Change Service Password
+----------------------------
+5. Show Services
 ============================
     """
     )
